@@ -8,6 +8,7 @@ Python-flask backend for cpp carpool app. Server listens on port 8080.
 
 ### Setup
 ```
+cd src
 pip install -r requirements.txt
 ```
 
