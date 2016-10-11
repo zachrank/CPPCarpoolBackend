@@ -11,6 +11,10 @@ api = Api(app)
 def health_check():
     return ('Hello World!', 200)
 
+@app.route('/carter/')
+def carter():
+    return 'Carter Slocum Was Here'
+
 if __name__ == '__main__':
     try:
         #start server
