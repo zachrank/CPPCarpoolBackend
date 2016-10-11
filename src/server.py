@@ -15,6 +15,10 @@ def health_check():
 def carter():
     return 'Carter Slocum Was Here'
 
+@app.route('/ztrank/')
+def ztrank():
+    return 'Is this working?'
+
 if __name__ == '__main__':
     try:
         #start server
