@@ -6,7 +6,6 @@ from gevent.wsgi import WSGIServer
 app = Flask(__name__)
 api = Api(app)
 
-
 @app.route('/')
 def health_check():
     return ('Hello World!', 200)
