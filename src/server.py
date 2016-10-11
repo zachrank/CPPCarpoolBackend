@@ -1,4 +1,5 @@
 import flask
+import numpy
 from flask import Flask
 from flask_restful import Api
 from gevent.wsgi import WSGIServer
@@ -6,6 +7,10 @@ from gevent.wsgi import WSGIServer
 app = Flask(__name__)
 api = Api(app)
 
+@app.route('/cartersNumbers/')
+def showfirst10():
+    a = numpy.arrange(10).reshape(5,2)
+    return a
 
 @app.route('/')
 def health_check():
