@@ -1,5 +1,6 @@
 #libraries
 import flask
+import numpy
 from flask import Flask, request
 from flask_restful import Api
 from gevent.wsgi import WSGIServer
@@ -10,6 +11,11 @@ from auth import requires_auth, issue_token, check_login
 app = Flask(__name__)
 app.config['DEBUG'] = True
 api = Api(app)
+
+@app.route('/cartersNumbers/')
+def showfirst10():
+    a = numpy.arrange(10).reshape(5,2)
+    return a
 
 @app.route('/')
 def health_check():
