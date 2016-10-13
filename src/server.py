@@ -1,6 +1,8 @@
 #libraries
 import flask
 import numpy
+import fuzzywuzzy
+from fuzzywuzzy import fuzz, process
 from flask import Flask, request
 from flask_restful import Api
 from gevent.wsgi import WSGIServer
@@ -26,6 +28,11 @@ def health_check():
 @requires_auth
 def auth_test():
     return ('Ok', 200)
+
+@app.route('/fuwu')
+def fuzzthewuzz():
+    ratio = fuzz.ratio("fuzz", "wuzz")
+    return ratio
 
 @app.route('/login', methods = ['POST'])
 def login():
