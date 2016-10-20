@@ -29,8 +29,11 @@ make build
 And to run the container:
 ```
 make dev
+```
 
-On Windows the Makefile needs to be modified in order to run. The path for the folder needs to be modified as below (the path needs to be specified per machine).
+On Windows machines the Makefile needs to be modified in order to run. The path for the folder needs to be modified as below (the path needs to be specified per machine).
 
+```
 dev:
 	docker run --rm -it -v c:/*insert path here*/cppcarpoolbackend/src:/usr/src/app -p 8080:8080 carpool-backend
+```
