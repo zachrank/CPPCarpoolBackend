@@ -1,8 +1,5 @@
 #libraries
 import flask
-import numpy
-import fuzzywuzzy
-from fuzzywuzzy import fuzz, process
 from flask import Flask, request
 from flask_restful import Api
 from gevent.wsgi import WSGIServer
@@ -14,10 +11,6 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 api = Api(app)
 
-@app.route('/cartersNumbers/')
-def showfirst10():
-    a = numpy.arrange(10).reshape(5,2)
-    return a
 
 @app.route('/')
 def health_check():
@@ -28,11 +21,6 @@ def health_check():
 @requires_auth
 def auth_test():
     return ('Ok', 200)
-
-@app.route('/fuwu')
-def fuzzthewuzz():
-    ratio = fuzz.ratio("fuzz", "wuzz")
-    return ratio
 
 @app.route('/login', methods = ['POST'])
 def login():
@@ -46,15 +34,6 @@ def login():
         return ('Unauthorized.', 401)
 
     return issue_token(user)
-
-
-@app.route('/carter/')
-def carter():
-    return 'Carter Slocum Was Here'
-
-@app.route('/ztrank/')
-def ztrank():
-    return 'Is this working?'
 
 if __name__ == '__main__':
     try:
