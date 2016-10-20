@@ -29,7 +29,3 @@ make build
 And to run the container:
 ```
 make dev
-
-On Windows change Makefile to have
-dev:
-	docker run --rm -it -v c:/users/ztrank/github/cppcarpoolbackend/src:/usr/src/app -p 8080:8080 carpool-backend
