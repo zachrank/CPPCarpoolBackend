@@ -23,6 +23,10 @@ class FlaskrTestCase(unittest.TestCase):
         assert rv.status_code == 200
         rv = self.login('', '')
         assert rv.status_code == 401
+        
+    #used for homework #6, delete later
+    def test_fuwu(self):
+        assert self.app.post('/fuwu', follow_redirects=True).status_code == 75
 
     def login(self, u, p):
         payload = {
