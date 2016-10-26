@@ -11,6 +11,8 @@ jwt_token_duration = 24 * 60 #24 hour tokens
 
 #verify login information
 def check_login(u, p):
+    if u is None or p is None or len(u) == 0:
+        return False
     return True
 
 #generate a new token for a user

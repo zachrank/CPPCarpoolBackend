@@ -33,7 +33,7 @@ def login():
     if not check_login(user, password):
         return ('Unauthorized.', 401)
 
-    return issue_token(user)
+    return (issue_token(user), 200)
 
 if __name__ == '__main__':
     try:
