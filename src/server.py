@@ -1,6 +1,7 @@
 #libraries
 import flask
 import fuzzywuzzy
+import numpy as np
 from fuzzywuzzy import fuzz, process
 from flask import Flask, request
 from flask_restful import Api
@@ -28,6 +29,12 @@ def auth_test():
 def fuzzthewuzz():
     ratio = fuzz.ratio("fuzz", "wuzz")
     return ('ratio', ratio)
+#used for homework, delete later -- carter
+@app.route('/nump')
+def testNumpy():
+    array = np.array([1,2,3,4])
+    array[1] = 20
+    return (array)
 
 @app.route('/login', methods = ['POST'])
 def login():
