@@ -9,12 +9,6 @@ with open('secrets/jwt.key', 'r') as key:
 
 jwt_token_duration = 24 * 60 #24 hour tokens
 
-#verify login information
-def check_login(u, p):
-    if u is None or p is None or len(u) == 0:
-        return False
-    return True
-
 #generate a new token for a user
 def issue_token(username):
     utcnow = datetime.utcnow()
@@ -111,10 +105,3 @@ def requires_auth(api_method):
             return unauthorized()
 
     return check_auth
-
-if __name__ == '__main__':
-    try:
-        print issue_token("testuser")
-
-    except Exception as e:
-        print e
