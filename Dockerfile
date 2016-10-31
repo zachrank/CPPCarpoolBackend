@@ -8,4 +8,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src /usr/src/app
 
-CMD ["python", "server.py"]
+ENTRYPOINT ["/usr/src/app/server.py"]
+#CMD ["runserver"]
