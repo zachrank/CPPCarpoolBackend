@@ -7,6 +7,13 @@ net:
 dev: net
 	docker run --rm -it --net cppcarpool -v `pwd`/src:/usr/src/app -p 8080:8080 carpool-backend
 
+run: net
+	docker run -d --name=cppcarpool-backend --net cppcarpool -p 8080:8080 carpool-backend
+
+stop:
+	-docker stop cppcarpool-backend
+	-docker rm cppcarpool-backend
+
 shell: net
 	docker run --rm -it --net cppcarpool -v `pwd`/src:/usr/src/app -p 8080:8080 carpool-backend /bin/bash
 
