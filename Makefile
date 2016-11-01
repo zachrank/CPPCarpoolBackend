@@ -5,7 +5,7 @@ net:
 	docker network ls | grep cppcarpool || docker network create cppcarpool
 
 dev: net
-	docker run --rm -it --net cppcarpool -v `pwd`/src:/usr/src/app -p 8080:8080 carpool-backend
+	docker run --rm -it --net cppcarpool --name=cppcarpool-backend -v `pwd`/src:/usr/src/app -p 8080:8080 carpool-backend
 
 run: net
 	docker run -d --name=cppcarpool-backend --net cppcarpool -p 8080:8080 carpool-backend
