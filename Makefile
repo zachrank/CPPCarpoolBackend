@@ -1,4 +1,4 @@
-build:
+build: stop
 	docker build -t carpool-backend .
 
 net:
