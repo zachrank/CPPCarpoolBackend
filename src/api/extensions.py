@@ -1,3 +1,4 @@
+import flask
 import jwt
 from flask import Response, request, make_response
 from datetime import datetime, timedelta
@@ -74,7 +75,7 @@ def requires_auth(api_method):
 
         try:
             #decode token
-            decoded_token = jwt.decode(payload, jwt_key, algorithms=['HS512'], options=jwt_options, verify=True)
+            decoded_token = jwt.decode(payload, jwt_key, algorithms=['HS512'], verify=True)
 
             #add email to request object
             request.email = decoded_token['email']
