@@ -74,21 +74,21 @@ class RegisterResource(Resource):
         email = get_form('email')
         alt = get_form('altemail')
         password = get_form('password')
-        fullname = get_form('name')
+        fullname = get_form('fullname')
 
         # make sure required fields are not empyty
         if email is None or password is None or fullname is None or len(fullname) == 0:
-            return 'Bad request', 400
+            return 'Missing fields', 400
 
         # use regex to enforce .cpp email
         if re.match(r'^[a-zA-Z]+@cpp\.edu$', email) is None:
-            return 'Bad request', 400
+            return 'cpp email', 400
 
         # make sure user doesn't already exist
         c = db.cursor()
         c.execute("SELECT id FROM users WHERE cppemail = %s", (email,))
         if c.fetchone() is not None:
-            return 'Bad request', 400
+            return 'account exists', 400
 
         # salt and hash password
         salt = os.urandom(32).encode('hex')
