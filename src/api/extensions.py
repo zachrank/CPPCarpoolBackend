@@ -9,12 +9,12 @@ with open('secrets/jwt.key', 'r') as key:
 
 jwt_token_duration = 24 * 60 #24 hour tokens
 
-#generate a new token for a user
-def issue_token(username):
+#generate a new token
+def issue_token(email):
     utcnow = datetime.utcnow()
     new_token = jwt.encode(
         {
-            'user': username,
+            'email': email,
             'iat': utcnow,
             'exp': utcnow + timedelta(
                 minutes=jwt_token_duration)
@@ -76,14 +76,14 @@ def requires_auth(api_method):
             #decode token
             decoded_token = jwt.decode(payload, jwt_key, algorithms=['HS512'], options=jwt_options, verify=True)
 
-            #add user to request object
-            request.user = decoded_token['user']
+            #add email to request object
+            request.email = decoded_token['email']
 
             # create new token
             utcnow = datetime.utcnow()
             new_token = jwt.encode(
                 {
-                    'user': decoded_token['user'],
+                    'email': decoded_token['email'],
                     'iat': utcnow,
                     'exp': utcnow + timedelta(
                         minutes=jwt_token_duration)
