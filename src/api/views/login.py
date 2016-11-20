@@ -94,8 +94,10 @@ class RegisterResource(Resource):
         salt = os.urandom(32).encode('hex')
         passhash = hashlib.sha256(password + salt).hexdigest()
 
+        verified = True # TODO: implement email verification
+
         # write to db
-        c.execute("INSERT INTO users (cppemail, fullname, altemail, salt, passhash) VALUES (%s, %s, %s, %s, %s)", (email, fullname, alt, salt, passhash))
+        c.execute("INSERT INTO users (cppemail, fullname, altemail, salt, passhash, verified) VALUES (%s, %s, %s, %s, %s)", (email, fullname, alt, salt, passhash, verified))
         db.commit()
 
         return 'OK', 200
