@@ -101,6 +101,7 @@ def requires_auth(api_method):
             return resp
         except jwt.ExpiredSignatureError:
             print "Expired token"
+            return unauthorized()
         except jwt.InvalidTokenError:
             print "Token decode error"
             return unauthorized()
