@@ -1,8 +1,29 @@
 from flask import Flask, jsonify
+from flask.json import JSONEncoder
 import psycopg2
+import calendar
+from datetime import datetime
 
 app = Flask(__name__)
 db = psycopg2.connect("dbname='cppc' user='postgres' host='cppcarpool-db' password=''")
+
+# custom json encoder to convert dates to iso 8601 format
+class CustomJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        try:
+            if isinstance(obj, datetime):
+                if obj.utcoffset() is not None:
+                    obj = obj - obj.utcoffset()
+                isodate = obj.isoformat()
+                return isodate
+            iterable = iter(obj)
+        except TypeError:
+            pass
+        else:
+            return list(iterable)
+        return JSONEncoder.default(self, obj)
+
+app.json_encoder = CustomJSONEncoder
 
 @app.errorhandler(404)
 def not_found(e):
@@ -22,7 +43,7 @@ def health_check():
 
 app.config['DEBUG'] = True
 
-#these modules are dependent on (app or db) so they must be imported down here
+# these modules are dependent on (app or db) so they must be imported down here
 from views.login import login_bp
 from views.user import user_bp
 

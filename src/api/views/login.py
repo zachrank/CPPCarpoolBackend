@@ -30,10 +30,13 @@ class LoginResource(Resource):
         # lookup user
         c = db.cursor(cursor_factory=DictCursor)
         c.execute("SELECT * FROM users WHERE cppemail = %s", (email,))
-        # shallow copy the result
-        row = dict(c.fetchone())
+
+        # check if we got a result
+        row = c.fetchone();
         if row is None:
-            return 'User does not exist', 401
+            return 'User does not exist', 404
+        # shallow copy result
+        row = dict(row)
 
         # check password
         passhash = hashlib.sha256(password + row['salt']).hexdigest()
@@ -53,7 +56,7 @@ class PasswordResource(Resource):
         return 'fg', 200
 
 class CheckResource(Resource):
-    #check to see if user with email already exists
+    # check to see if user with email already exists
     def post(self):
         email = get_form('email')
 
@@ -70,7 +73,7 @@ class CheckResource(Resource):
         return jsonify(row)
 
 class RegisterResource(Resource):
-    #register a new user
+    # register a new user
     def post(self):
         email = get_form('email')
         alt = get_form('altemail')

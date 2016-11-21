@@ -20,8 +20,7 @@ class UserResource(Resource):
         row = c.fetchone();
         if row is None:
             return 'User does not exist', 404
-
-        #shallow copy result
+        # shallow copy result
         row = dict(row)
 
         # delete salt and passhash from row
@@ -43,8 +42,7 @@ class OtherUserResource(Resource):
         row = c.fetchone();
         if row is None:
             return 'User does not exist', 404
-
-        #shallow copy result
+        # shallow copy result
         row = dict(row)
 
         # delete salt and passhash from row
