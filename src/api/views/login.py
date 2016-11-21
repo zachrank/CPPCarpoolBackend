@@ -4,6 +4,7 @@ import os
 import hashlib
 import base64
 import re
+from datetime import datetime
 
 from api import db
 from psycopg2.extras import DictCursor
@@ -97,7 +98,7 @@ class RegisterResource(Resource):
         verified = True # TODO: implement email verification
 
         # write to db
-        c.execute("INSERT INTO users (cppemail, fullname, altemail, salt, passhash, verified) VALUES (%s, %s, %s, %s, %s)", (email, fullname, alt, salt, passhash, verified))
+        c.execute("INSERT INTO users (cppemail, fullname, altemail, salt, passhash, verified, timestamp) VALUES (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)", (email, fullname, alt, salt, passhash, verified))
         db.commit()
 
         return 'OK', 200
