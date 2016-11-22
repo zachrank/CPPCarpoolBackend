@@ -4,6 +4,7 @@ import os
 import hashlib
 import base64
 import re
+from datetime import datetime
 
 from api import db
 from psycopg2.extras import DictCursor
@@ -29,10 +30,13 @@ class LoginResource(Resource):
         # lookup user
         c = db.cursor(cursor_factory=DictCursor)
         c.execute("SELECT * FROM users WHERE cppemail = %s", (email,))
-        # shallow copy the result
-        row = dict(c.fetchone())
+
+        # check if we got a result
+        row = c.fetchone();
         if row is None:
-            return 'User does not exist', 401
+            return 'User does not exist', 404
+        # shallow copy result
+        row = dict(row)
 
         # check password
         passhash = hashlib.sha256(password + row['salt']).hexdigest()
@@ -52,7 +56,7 @@ class PasswordResource(Resource):
         return 'fg', 200
 
 class CheckResource(Resource):
-    #check to see if user with email already exists
+    # check to see if user with email already exists
     def post(self):
         email = get_form('email')
 
@@ -69,7 +73,7 @@ class CheckResource(Resource):
         return jsonify(row)
 
 class RegisterResource(Resource):
-    #register a new user
+    # register a new user
     def post(self):
         email = get_form('email')
         alt = get_form('altemail')
@@ -94,8 +98,10 @@ class RegisterResource(Resource):
         salt = os.urandom(32).encode('hex')
         passhash = hashlib.sha256(password + salt).hexdigest()
 
+        verified = True # TODO: implement email verification
+
         # write to db
-        c.execute("INSERT INTO users (cppemail, fullname, altemail, salt, passhash) VALUES (%s, %s, %s, %s, %s)", (email, fullname, alt, salt, passhash))
+        c.execute("INSERT INTO users (cppemail, fullname, altemail, salt, passhash, verified, timestamp) VALUES (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)", (email, fullname, alt, salt, passhash, verified))
         db.commit()
 
         return 'OK', 200

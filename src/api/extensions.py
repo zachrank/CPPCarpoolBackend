@@ -8,9 +8,9 @@ jwt_key =  ""
 with open('secrets/jwt.key', 'r') as key:
     jwt_key = key.read()
 
-jwt_token_duration = 24 * 60 #24 hour tokens
+jwt_token_duration = 24 * 60 # 24 hour tokens
 
-#generate a new token
+# generate a new token
 def issue_token(email):
     utcnow = datetime.utcnow()
     new_token = jwt.encode(
@@ -74,10 +74,10 @@ def requires_auth(api_method):
             return unauthorized()
 
         try:
-            #decode token
+            # decode token
             decoded_token = jwt.decode(payload, jwt_key, algorithms=['HS512'], verify=True)
 
-            #add email to request object
+            # add email to request object
             request.email = decoded_token['email']
 
             # create new token
@@ -92,7 +92,7 @@ def requires_auth(api_method):
                 jwt_key,
                 algorithm='HS512')
 
-            #wrap the original api method
+            # wrap the original api method
             resp = parseResp(api_method(*args, **kwargs))
 
             # Inject new token
@@ -101,6 +101,7 @@ def requires_auth(api_method):
             return resp
         except jwt.ExpiredSignatureError:
             print "Expired token"
+            return unauthorized()
         except jwt.InvalidTokenError:
             print "Token decode error"
             return unauthorized()
