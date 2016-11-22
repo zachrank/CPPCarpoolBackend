@@ -6,7 +6,6 @@ def getNearbyUsers(user):
 	    # lookup user
         c = db.cursor(cursor_factory=DictCursor)
         c.execute("SELECT * FROM users WHERE cppemail != %s", user)
-        # check if we got a result
         users = []
         for i in range(c.rowcount()):
 	        row = c.fetchone()

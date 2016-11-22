@@ -46,7 +46,9 @@ app.config['DEBUG'] = True
 # these modules are dependent on (app or db) so they must be imported down here
 from views.login import login_bp
 from views.user import user_bp
-
+from views.findRides import findRides_bp
+import maps
 # Register views
 app.register_blueprint(login_bp, url_prefix='/login')
 app.register_blueprint(user_bp, url_prefix='/user')
+app.register_blueprint(findRides_bp, url_prefix='/findRides')
