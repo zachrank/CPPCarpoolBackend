@@ -1,5 +1,20 @@
 import googlemaps as gm
+from api import db
+from psycopg2.extras import DictCursor
 
+def getNearbyUsers(user):
+	    # lookup user
+        c = db.cursor(cursor_factory=DictCursor)
+        c.execute("SELECT * FROM users WHERE cppemail != %s", user)
+        # check if we got a result
+        users = []
+        for i in range(c.rowcount()):
+	        row = c.fetchone()
+	        # shallow copy result
+	        row = dict(row)
+	        #get email and address
+	        users.append((row['cppemail'],row['addressline1']))
+	    return sortByDist(user,users)
 
 # ((username, address,),[(otherusers,addresses)])
 def sortByDist(user, otherUsers):
