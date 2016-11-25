@@ -47,7 +47,7 @@ class LoginResource(Resource):
         del row['passhash']
         del row['salt']
 
-        row['token'] = issue_token(row['cppemail'])
+        row['token'] = issue_token(row['id'], row['cppemail'])
 
         return jsonify(row)
 
