@@ -32,7 +32,7 @@ class LoginResource(Resource):
         c.execute("SELECT * FROM users WHERE cppemail = %s", (email,))
 
         # check if we got a result
-        row = c.fetchone();
+        row = c.fetchone()
         if row is None:
             return 'User does not exist', 404
         # shallow copy result
