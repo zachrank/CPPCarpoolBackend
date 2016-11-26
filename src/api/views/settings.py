@@ -1,6 +1,9 @@
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
-
+import os
+import hashlib
+import base64
+import re
 from api.picture import resizeimage
 from api.extensions import requires_auth
 
