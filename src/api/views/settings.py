@@ -91,6 +91,6 @@ class PictureResource(Resource):
 
 			return 'OK', 200
 
-
+settings_api.add_resource(SettingsResource, '/')
 settings_api.add_resource(PasswordResource, '/password')
 settings_api.add_resource(PictureResource, '/picture')
