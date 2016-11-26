@@ -22,7 +22,7 @@ class RidesResource(Resource):
         user = (request.email, row['addressline1'] + ' ' + row['city'] + ', ' + str(row['zip']))
 
         # load all other users
-        c.execute("SELECT * FROM users WHERE cppemail != %s AND verified = true AND profilecomplete = true", (request.email,))
+        c.execute("SELECT * FROM users WHERE cppemail != %s AND verified = true AND profilecomplete = true AND addressline1 IS NOT NULL and city IS NOT NULL and zip IS NOT NULL", (request.email,))
         rows = c.fetchall()
 
         for row in rows:
