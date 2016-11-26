@@ -48,6 +48,8 @@ class SettingsResource(Resource):
 		c.execute("DELETE FROM schedule WHERE userid = %s", (request.id,))
 		c.execute("DELETE FROM interaction WHERE user1 = %s OR user2 = %s", (request.id, request.id,))
 
+		return "OK", 202
+
 
 class PasswordResource(Resource):
 	# reset user password
