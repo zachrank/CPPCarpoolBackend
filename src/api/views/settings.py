@@ -28,18 +28,22 @@ class SettingsResource(Resource):
 		addressline1 = get_form('addressline1')
 		addressline2 = get_form('addressline2')
 		city = get_form('city')
-		zip = get_form('zip')
+		zipcode = get_form('zip')
 		# schedule = #array[7] of tuples[3]
 		drivingpref = get_form('drivingpref')
 		maxdist = get_form('maxdist')
 
 		# make sure required fields are not empty
-		if altemail is None or addressline1 is None or addressline2 is None or city is None or zip is None or drivingpref is None or maxdist is None:
+		if altemail is None or addressline1 is None or addressline2 is None or city is None or zipcode is None or drivingpref is None or maxdist is None:
 			return 'Missing fields', 400
 
-			c = db.cursor(cursor_factory=RealDictCursor)
-			c.execute("UPDATE users SET altemail = %s, addressline1 = %s, addressline2 = %s, city = %s, zip = %s, drivingpref = %s, maxdist = %s WHERE id = %s", (altemail, addressline1, addressline2, city, zip, drivingpref, maxdist, request.id))
-			db.commit()
+		c = db.cursor(cursor_factory=RealDictCursor)
+		c.execute("UPDATE users SET altemail = %s, addressline1 = %s, addressline2 = %s, city = %s, zip = %s, drivingpref = %s, maxdist = %s WHERE id = %s", (altemail, addressline1, addressline2, city, zipcode, drivingpref, maxdist, request.id))
+		db.commit()
+		c.execute("SELECT * FROM users WHERE id = %s" (request.id,))
+		print c.fetchone()
+
+		return "OK", 200
 
 	# delete user account
 	@requires_auth
@@ -69,11 +73,6 @@ class PasswordResource(Resource):
 		c.execute("SELECT * FROM users WHERE cppemail = %s", (request.email,))
 		salt = os.urandom(32).encode('hex')
 		passhash = hashlib.sha256(newpassword + salt).hexdigest()
-
-		c.execute("SELECT passhash, salt FROM users WHERE cppemail = %s", (request.email,))
-		print c.fetchone()
-		print passhash
-		print salt
 
 		# write to db
 		c.execute("UPDATE users SET salt = %s, passhash = %s WHERE id = %s", (salt, passhash, request.id))
