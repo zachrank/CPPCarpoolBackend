@@ -63,7 +63,7 @@ app.config['DEBUG'] = True
 from views.login import login_bp
 from views.user import user_bp
 from views.review import review_bp
-from views.findRides import findRides_bp
+from views.search import search_bp
 from views.settings import settings_bp
 import maps
 
@@ -71,5 +71,5 @@ import maps
 app.register_blueprint(login_bp, url_prefix='/login')
 app.register_blueprint(user_bp, url_prefix='/user')
 app.register_blueprint(review_bp, url_prefix='/review')
-app.register_blueprint(findRides_bp, url_prefix='/findRides')
+app.register_blueprint(search_bp, url_prefix='/search')
 app.register_blueprint(settings_bp, url_prefix='/settings')

@@ -6,8 +6,8 @@ from api.extensions import issue_token
 from api.extensions import requires_auth
 from api import maps
 
-findRides_bp = Blueprint('findRides_bp', __name__)
-findRides_api = Api(findRides_bp)
+search_bp = Blueprint('search_bp', __name__)
+search_api = Api(search_bp)
 
 class RidesResource(Resource):
     @requires_auth
@@ -61,4 +61,4 @@ class RidesResource(Resource):
 
         return jsonify(results=sortedUsers)
 
-findRides_api.add_resource(RidesResource, '/')
+search_api.add_resource(RidesResource, '/')
