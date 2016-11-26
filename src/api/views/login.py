@@ -101,7 +101,15 @@ class RegisterResource(Resource):
         verified = True # TODO: implement email verification
 
         # write to db
-        c.execute("INSERT INTO users (cppemail, fullname, altemail, salt, passhash, verified, timestamp) VALUES (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)", (email, fullname, alt, salt, passhash, verified))
+        c.execute("INSERT INTO users (cppemail, fullname, altemail, salt, passhash, verified, timestamp) VALUES (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP) RETURNING id", (email, fullname, alt, salt, passhash, verified))
+        userid = c.fetchone()[0]
+        values = []
+        for day in range(7):
+            values.append(userid)
+            values.append(day)
+
+        # write empty schedule to db
+        c.execute("INSERT INTO schedule (userid, dayofweek) VALUES (%s, %s), (%s, %s), (%s, %s), (%s, %s), (%s, %s), (%s, %s), (%s, %s)", tuple(values))
         db.commit()
 
         return 'OK', 200
