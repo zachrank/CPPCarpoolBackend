@@ -5,12 +5,13 @@ import hashlib
 import base64
 import re
 import time
+import io
 import json
-from api.picture import resizeimage
 from api.extensions import requires_auth
-
-from api import db
+from api import db, allowed_file
 from psycopg2.extras import RealDictCursor
+from PIL import Image
+from resizeimage import resizeimage
 
 settings_bp = Blueprint('settings_bp', __name__)
 settings_api = Api(settings_bp)
@@ -101,17 +102,29 @@ class PictureResource(Resource):
     # upload new profile picture
     @requires_auth
     def post(self):
-        # might need to convert from base64 encoding prior to getting the form
-        picture = resizeimage(get_form('profilepicture'))
 
-        # make sure required fields are not empty
-        if picture is None:
-            return 'Missing fields', 400
+        # if no file
+        if 'picture' not in request.files:
+            return 'Missing file', 400
+
+        # get filename
+        picture = request.files['picture']
+
+        # check if the file is one of the allowed filetypes / extensions or empty
+        if picture is None or not allowed_file(picture.filename):
+            return 'Bad file', 400
+
+        image = Image.open(picture.stream)
+        croppedpicture = resizeimage.resize_cover(image, [256, 256])
+        imgByteArr = io.BytesIO()
+        croppedpicture.save(imgByteArr, format='JPEG')
+        imgByteArr = bytearray(imgByteArr.getvalue())
 
         # write to db
         c = db.cursor(cursor_factory=RealDictCursor)
-        c.execute("INSERT INTO users (picture) VALUES (%s)", (picture))
+        c.execute("UPDATE users SET picture = %s WHERE id = %s", (imgByteArr, request.id))
         db.commit()
+
 
         return 'OK', 200
 
