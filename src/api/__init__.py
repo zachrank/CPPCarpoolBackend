@@ -3,6 +3,7 @@ from flask.json import JSONEncoder
 import psycopg2
 import calendar
 from datetime import datetime, time
+import base64
 import os
 from werkzeug.utils import secure_filename
 
@@ -14,7 +15,11 @@ db = psycopg2.connect("dbname='cppc' user='postgres' host='cppcarpool-db' passwo
 # custom json encoder to convert dates to iso 8601 format
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):
+        print type(obj)
         try:
+            if isinstance(obj, buffer):
+                return base64.b64encode(obj)
+
             if isinstance(obj, time):
                 return "{:02d}:{:02d}:{:02d}".format(obj.hour, obj.minute, obj.second)
 
