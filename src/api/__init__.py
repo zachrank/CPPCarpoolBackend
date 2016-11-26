@@ -1,8 +1,12 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, redirect, url_for
 from flask.json import JSONEncoder
 import psycopg2
 import calendar
 from datetime import datetime, time
+import os
+from werkzeug.utils import secure_filename
+
+ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg', 'bmp', 'tif', 'gif'])
 
 app = Flask(__name__)
 db = psycopg2.connect("dbname='cppc' user='postgres' host='cppcarpool-db' password=''")
@@ -29,6 +33,10 @@ class CustomJSONEncoder(JSONEncoder):
 
 app.json_encoder = CustomJSONEncoder
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 @app.errorhandler(404)
 def not_found(e):
     return jsonify({"message": "Not found."}), 404
@@ -52,6 +60,7 @@ from views.login import login_bp
 from views.user import user_bp
 from views.review import review_bp
 from views.findRides import findRides_bp
+from views.settings import settings_bp
 import maps
 
 # Register views
@@ -59,3 +68,4 @@ app.register_blueprint(login_bp, url_prefix='/login')
 app.register_blueprint(user_bp, url_prefix='/user')
 app.register_blueprint(review_bp, url_prefix='/review')
 app.register_blueprint(findRides_bp, url_prefix='/findRides')
+app.register_blueprint(settings_bp, url_prefix='/settings')
