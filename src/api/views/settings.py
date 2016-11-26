@@ -62,17 +62,17 @@ class PasswordResource(Resource):
 		if oldpassword is None or newpassword is None:
 			return 'Missing fields', 400
 
-			# salt password
-			c = db.cursor(cursor_factory=RealDictCursor)
-			c.execute("SELECT * FROM users WHERE cppemail = %s", (request.email,))
-			salt = os.urandom(32).encode('hex')
-			passhash = hashlib.sha256(newpassword + salt).hexdigest()
+		# salt password
+		c = db.cursor(cursor_factory=RealDictCursor)
+		c.execute("SELECT * FROM users WHERE cppemail = %s", (request.email,))
+		salt = os.urandom(32).encode('hex')
+		passhash = hashlib.sha256(newpassword + salt).hexdigest()
 
-			# write to db
-			c.execute("INSERT INTO users (salt, passhash) VALUES (%s, %s)", (salt, passhash))
-			db.commit()
+		# write to db
+		c.execute("INSERT INTO users (salt, passhash) VALUES (%s, %s)", (salt, passhash))
+		db.commit()
 
-			return 'OK', 200
+		return 'OK', 200
 
 
 class PictureResource(Resource):
@@ -86,12 +86,12 @@ class PictureResource(Resource):
 		if picture is None:
 			return 'Missing fields', 400
 
-			# write to db
-			c = db.cursor(cursor_factory=RealDictCursor)
-			c.execute("INSERT INTO users (picture) VALUES (%s)", (picture))
-			db.commit()
+		# write to db
+		c = db.cursor(cursor_factory=RealDictCursor)
+		c.execute("INSERT INTO users (picture) VALUES (%s)", (picture))
+		db.commit()
 
-			return 'OK', 200
+		return 'OK', 200
 
 settings_api.add_resource(SettingsResource, '/')
 settings_api.add_resource(PasswordResource, '/password')
