@@ -40,15 +40,24 @@ class RidesResource(Resource):
         for user in sortedUsers:
             # fetch reviews
             c.execute("SELECT * FROM reviews WHERE reviewee_userid = %s", (user['id'],))
-            rows = c.fetchall()
+            reviews = c.fetchall()
+            reviewCount = len(reviews)
+            stars = 0
 
-            # compute average num of stars
-            starsList = list(map(lambda r: r['stars'], rows))
-            stars = reduce(lambda sum, s: sum + s, starsList) / len(rows)
+            if reviewCount > 0:
+                # compute average num of stars
+                starsList = list(map(lambda r: r['stars'], reviews))
+                stars = reduce(lambda sum, s: sum + s, starsList) / reviewCount
 
             # add on review count and avg stars
-            user['reviewCount'] = len(rows)
+            user['reviewCount'] = reviewCount
             user['stars'] = stars
+
+            # fetch schedule
+            c.execute("SELECT * FROM schedule WHERE userid = %s ORDER BY dayofweek ASC", (user['id'],))
+            scheduled_days = c.fetchall()
+
+            user['schedule'] = [{'arrive': d['arrive'], 'depart': d['depart']} for d in scheduled_days]
 
         return jsonify(results=sortedUsers)
 
