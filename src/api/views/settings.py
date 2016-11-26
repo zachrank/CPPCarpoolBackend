@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
 
 from api.picture import resizeimage
+from api.extensions import requires_auth
 
 from api import db
 from psycopg2.extras import DictCursor
@@ -11,8 +12,8 @@ settings_api = Api(settings_bp)
 
 
 class SettingsResource(Resource):
-	@requires_auth
 	# modify a user's profile
+	@requires_auth
 	def post(self):
 		altemail = get_form('altemail')
 		addressline1 = get_form('addressline1')
@@ -34,8 +35,8 @@ class SettingsResource(Resource):
 
 
 class PasswordResource(Resource):
-	@requires_auth
 	# reset user password
+	@requires_auth
 	def post(self):
 		oldpassword = get_form('oldpassword')
 		newpassword = get_form('newpassword')
@@ -58,8 +59,8 @@ class PasswordResource(Resource):
 
 
 class PictureResource(Resource):
-	@requires_auth
 	# upload new profile picture
+	@requires_auth
 	def post(self):
 		# might need to convert from base64 encoding prior to getting the form
 		picture = resizeimage(get_form('profilepicture'))
