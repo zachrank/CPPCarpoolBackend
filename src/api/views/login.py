@@ -7,7 +7,7 @@ import re
 from datetime import datetime
 
 from api import db
-from psycopg2.extras import DictCursor
+from psycopg2.extras import RealDictCursor
 from api.extensions import issue_token
 
 login_bp = Blueprint('login_bp', __name__)
@@ -28,7 +28,7 @@ class LoginResource(Resource):
             return 'Bad request', 400
 
         # lookup user
-        c = db.cursor(cursor_factory=DictCursor)
+        c = db.cursor(cursor_factory=RealDictCursor)
         c.execute("SELECT * FROM users WHERE cppemail = %s", (email,))
 
         # check if we got a result
@@ -44,16 +44,7 @@ class LoginResource(Resource):
         if passhash != row['passhash']:
             return 'Bad password', 401
 
-        del row['passhash']
-        del row['salt']
-
-        row['token'] = issue_token(row['id'], row['cppemail'])
-
-        return jsonify(row)
-
-class PasswordResource(Resource):
-    def post(self):
-        return 'fg', 200
+        return jsonify({'token': issue_token(row['id'], row['cppemail'])})
 
 class CheckResource(Resource):
     # check to see if user with email already exists
@@ -63,7 +54,7 @@ class CheckResource(Resource):
         if email is None:
             return 'Bad request', 400
 
-        c = db.cursor(cursor_factory=DictCursor)
+        c = db.cursor(cursor_factory=RealDictCursor)
         c.execute("SELECT id, fullname FROM users WHERE cppemail = %s", (email,))
         row = c.fetchone()
 
@@ -115,6 +106,5 @@ class RegisterResource(Resource):
         return 'OK', 200
 
 login_api.add_resource(LoginResource, '/')
-login_api.add_resource(PasswordResource, '/forgot')
 login_api.add_resource(RegisterResource, '/register')
 login_api.add_resource(CheckResource, '/check')
