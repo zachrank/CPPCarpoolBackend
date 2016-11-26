@@ -2,26 +2,33 @@ from flask import Flask, jsonify, request, redirect, url_for
 from flask.json import JSONEncoder
 import psycopg2
 import calendar
-from datetime import datetime
+from datetime import datetime, time
+import base64
 import os
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = '/tmp'
 ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg', 'bmp', 'tif', 'gif'])
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 db = psycopg2.connect("dbname='cppc' user='postgres' host='cppcarpool-db' password=''")
 
 # custom json encoder to convert dates to iso 8601 format
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):
+        print type(obj)
         try:
+            if isinstance(obj, buffer):
+                return base64.b64encode(obj)
+
+            if isinstance(obj, time):
+                return "{:02d}:{:02d}:{:02d}".format(obj.hour, obj.minute, obj.second)
+
             if isinstance(obj, datetime):
                 if obj.utcoffset() is not None:
                     obj = obj - obj.utcoffset()
                 isodate = obj.isoformat()
                 return isodate
+
             iterable = iter(obj)
         except TypeError:
             pass

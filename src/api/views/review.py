@@ -53,6 +53,7 @@ class ReviewsResource(Resource):
 
         # get all reviews for user, join with users table
         c.execute("DELETE FROM reviews WHERE id = %s", (reviewid,))
+        db.commit()
 
         return 'OK', 202
 

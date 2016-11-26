@@ -10,7 +10,8 @@ def sortByDist(user, otherUsers):
 	return nearByList
 #gmaps only takes 25 users at a time
 def getDists(user, subUsers):
-	maps =  gm.Client(key="AIzaSyBSZGhzoWEwa8UjPG5AA_-Yyf977w6kaSk")
+	#maps = gm.Client(key="AIzaSyBSZGhzoWEwa8UjPG5AA_-Yyf977w6kaSk")
+	maps = gm.Client(key="AIzaSyBDFnkopSlI9WxUmYpAB4MWYQ7UZaxFsH8")
 	#def distance_matrix(client, origins, destinations,
 	#                    mode=None, language=None, avoid=None, units=None,
 	#                    departure_time=None, arrival_time=None, transit_mode=None,
