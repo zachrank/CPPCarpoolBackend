@@ -39,6 +39,15 @@ class SettingsResource(Resource):
 			(altemail, addressline1, addressline2, city, zip, drivingpref, maxdist))
 			db.commit()
 
+	# delete user account
+	@requires_auth
+	def delete(self):
+		c = db.cursor(cursor_factory=RealDictCursor)
+		c.execute("DELETE FROM users WHERE id = %s", (request.id,))
+		c.execute("DELETE FROM reviews WHERE reviewer_userid = %s OR reviewee_userid = %s", (request.id, request.id,))
+		c.execute("DELETE FROM schedule WHERE userid = %s", (request.id,))
+		c.execute("DELETE FROM interaction WHERE user1 = %s OR user2 = %s", (request.id, request.id,))
+
 
 class PasswordResource(Resource):
 	# reset user password
@@ -83,16 +92,5 @@ class PictureResource(Resource):
 			return 'OK', 200
 
 
-class DeleteResource(Resource):
-	@requires_auth
-	# delete user account
-	def post(self):
-		c = db.cursor(cursor_factory=RealDictCursor)
-		c.execute("DELETE FROM users WHERE id = %s", (request.id,))
-		c.execute("DELETE FROM reviews WHERE reviewer_userid = %s OR reviewee_userid = %s", (request.id, request.id,))
-		c.execute("DELETE FROM schedule WHERE userid = %s", (request.id,))
-		c.execute("DELETE FROM interaction WHERE user1 = %s OR user2 = %s", (request.id, request.id,))
-
-settings_api.add_resource(DeleteResource, '/delete')
 settings_api.add_resource(PasswordResource, '/password')
 settings_api.add_resource(PictureResource, '/picture')
