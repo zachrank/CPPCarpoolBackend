@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from flask.json import JSONEncoder
 import psycopg2
 import calendar
-from datetime import datetime
+from datetime import datetime, time
 
 app = Flask(__name__)
 db = psycopg2.connect("dbname='cppc' user='postgres' host='cppcarpool-db' password=''")
@@ -11,11 +11,15 @@ db = psycopg2.connect("dbname='cppc' user='postgres' host='cppcarpool-db' passwo
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):
         try:
+            if isinstance(obj, time):
+                return "{:02d}:{:02d}:{:02d}".format(obj.hour, obj.minute, obj.second)
+
             if isinstance(obj, datetime):
                 if obj.utcoffset() is not None:
                     obj = obj - obj.utcoffset()
                 isodate = obj.isoformat()
                 return isodate
+
             iterable = iter(obj)
         except TypeError:
             pass
