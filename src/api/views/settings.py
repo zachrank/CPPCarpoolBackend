@@ -70,7 +70,7 @@ class PasswordResource(Resource):
 		salt = os.urandom(32).encode('hex')
 		passhash = hashlib.sha256(newpassword + salt).hexdigest()
 
-		c.execute("SELECT passhash, salt FROM users WHERE cppemail = %s", (request.email))
+		c.execute("SELECT passhash, salt FROM users WHERE cppemail = %s", (request.email,))
 		print c.fetchone()
 		print passhash
 		print salt
