@@ -33,12 +33,16 @@ class SettingsResource(Resource):
 		drivingpref = get_form('drivingpref')
 		maxdist = get_form('maxdist')
 
-		# make sure required fields are not empty
+		# make sure required fields are not missing
 		if altemail is None or addressline1 is None or addressline2 is None or city is None or zipcode is None or drivingpref is None or maxdist is None:
 			return 'Missing fields', 400
 
+		# make sure the required fields are not empty
+		if len(altemail) == 0 or len(addressline1) == 0 or len(addressline2) == 0 or len(city) == 0 or len(zipcode) == 0 or len(drivingpref) == 0 or len(maxdist) == 0:
+			return 'Empty fields', 400
+
 		c = db.cursor(cursor_factory=RealDictCursor)
-		c.execute("UPDATE users SET altemail = %s, addressline1 = %s, addressline2 = %s, city = %s, zip = %s, drivingpref = %s, maxdist = %s WHERE id = %s", (altemail, addressline1, addressline2, city, zipcode, drivingpref, maxdist, request.id))
+		c.execute("UPDATE users SET altemail = %s, addressline1 = %s, addressline2 = %s, city = %s, zip = %s, drivingpref = %s, maxdist = %s, profilecomplete = true WHERE id = %s", (altemail, addressline1, addressline2, city, zipcode, drivingpref, maxdist, request.id))
 		db.commit()
 		c.execute("SELECT * FROM users WHERE id = %s" (request.id,))
 		print c.fetchone()
