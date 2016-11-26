@@ -44,7 +44,7 @@ class SettingsResource(Resource):
 		c = db.cursor(cursor_factory=RealDictCursor)
 		c.execute("UPDATE users SET altemail = %s, addressline1 = %s, addressline2 = %s, city = %s, zip = %s, drivingpref = %s, maxdist = %s, profilecomplete = true WHERE id = %s", (altemail, addressline1, addressline2, city, zipcode, drivingpref, maxdist, request.id))
 		db.commit()
-		c.execute("SELECT * FROM users WHERE id = %s" (request.id,))
+		c.execute("SELECT * FROM users WHERE id = %s", (request.id,))
 		print c.fetchone()
 
 		return "OK", 200
