@@ -7,7 +7,7 @@ from api import db
 from psycopg2.extras import DictCursor
 
 settings_bp = Blueprint('settings_bp', __name__)
-profile_api = Api(user_bp)
+settings_api = Api(settings_bp)
 
 class SettingsResource(Resource):
 	@requires_auth
