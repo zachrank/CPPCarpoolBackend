@@ -70,6 +70,11 @@ class PasswordResource(Resource):
 		salt = os.urandom(32).encode('hex')
 		passhash = hashlib.sha256(newpassword + salt).hexdigest()
 
+		c.execute("SELECT passhash, salt FROM users WHERE cppemail = %s", (request.email))
+		print c.fetchone()
+		print passhash
+		print salt
+
 		# write to db
 		c.execute("UPDATE users SET salt = %s, passhash = %s WHERE id = %s", (salt, passhash, request.id))
 		db.commit()
