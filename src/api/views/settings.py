@@ -38,7 +38,7 @@ class SettingsResource(Resource):
 			return 'Missing fields', 400
 
 			c = db.cursor(cursor_factory=RealDictCursor)
-			c.execute("INSERT INTO users (altemail, addressline1, addressline2, city, zip, drivingpref, maxdist) VALUES (%s, %s, %s, %s, %s, %s, %s) WHERE id = %s", (altemail, addressline1, addressline2, city, zip, drivingpref, maxdist, request.id))
+			c.execute("UPDATE users SET (altemail, addressline1, addressline2, city, zip, drivingpref, maxdist) VALUES (%s, %s, %s, %s, %s, %s, %s) WHERE id = %s", (altemail, addressline1, addressline2, city, zip, drivingpref, maxdist, request.id))
 			db.commit()
 
 	# delete user account
@@ -71,7 +71,7 @@ class PasswordResource(Resource):
 		passhash = hashlib.sha256(newpassword + salt).hexdigest()
 
 		# write to db
-		c.execute("INSERT INTO users (salt, passhash) VALUES (%s, %s) WHERE id = %s", (salt, passhash, request.id))
+		c.execute("UPDATE users SET (salt, passhash) VALUES (%s, %s) WHERE id = %s", (salt, passhash, request.id))
 		db.commit()
 
 		return 'OK', 200
