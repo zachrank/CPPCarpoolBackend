@@ -5,7 +5,7 @@ from api.picture import resizeimage
 from api.extensions import requires_auth
 
 from api import db
-from psycopg2.extras import DictCursor
+from psycopg2.extras import RealDictCursor
 
 settings_bp = Blueprint('settings_bp', __name__)
 settings_api = Api(settings_bp)
