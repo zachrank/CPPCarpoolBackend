@@ -48,7 +48,7 @@ from views.login import login_bp
 from views.user import user_bp
 from views.review import review_bp
 from views.findRides import findRides_bp
-from views.settings import settings_api
+from views.settings import settings_bp
 import maps
 
 # Register views
