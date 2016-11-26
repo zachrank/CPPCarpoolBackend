@@ -11,6 +11,12 @@ settings_bp = Blueprint('settings_bp', __name__)
 settings_api = Api(settings_bp)
 
 
+def get_form(key):
+    if key not in request.form:
+        return None
+    return request.form[key]
+
+
 class SettingsResource(Resource):
 	# modify a user's profile
 	@requires_auth
