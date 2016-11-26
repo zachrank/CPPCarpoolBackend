@@ -15,7 +15,6 @@ db = psycopg2.connect("dbname='cppc' user='postgres' host='cppcarpool-db' passwo
 # custom json encoder to convert dates to iso 8601 format
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):
-        print type(obj)
         try:
             if isinstance(obj, buffer):
                 return base64.b64encode(obj)
