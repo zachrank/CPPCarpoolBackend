@@ -34,8 +34,8 @@ class SettingsResource(Resource):
 		maxdist = get_form('maxdist')
 
 		# make sure required fields are not missing
-		if altemail is None or addressline1 is None or addressline2 is None or city is None or zipcode is None or drivingpref is None or maxdist is None:
-			return 'Missing fields', 400
+		# if altemail is None or addressline1 is None or addressline2 is None or city is None or zipcode is None or drivingpref is None or maxdist is None:
+		# 	return 'Missing fields', 400
 
 		# make sure the required fields are not empty
 		if len(altemail) == 0 or len(addressline1) == 0 or len(addressline2) == 0 or len(city) == 0 or len(zipcode) == 0 or len(drivingpref) == 0 or len(maxdist) == 0:
