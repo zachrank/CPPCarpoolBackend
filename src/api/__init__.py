@@ -1,10 +1,16 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, redirect, url_for
 from flask.json import JSONEncoder
 import psycopg2
 import calendar
 from datetime import datetime
+import os
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = '/tmp'
+ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg', 'bmp', 'tif', 'gif'])
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 db = psycopg2.connect("dbname='cppc' user='postgres' host='cppcarpool-db' password=''")
 
 # custom json encoder to convert dates to iso 8601 format
@@ -24,6 +30,10 @@ class CustomJSONEncoder(JSONEncoder):
         return JSONEncoder.default(self, obj)
 
 app.json_encoder = CustomJSONEncoder
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @app.errorhandler(404)
 def not_found(e):
