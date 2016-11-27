@@ -57,6 +57,13 @@ def unauthorized(e):
 def health_check():
     return ('OK', 200)
 
+# @app.before_request
+# def kill_time():
+#     import time
+#     # sleep for 250ms
+#     time.sleep(.25)
+
+
 app.config['DEBUG'] = True
 
 # these modules are dependent on (app or db) so they must be imported down here
