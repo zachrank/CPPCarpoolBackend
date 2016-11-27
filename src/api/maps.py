@@ -18,7 +18,7 @@ def getDists(user, subUsers):
 	#                    transit_routing_preference=None, traffic_model=None):
 	response = maps.distance_matrix(buildAddress(user), [buildAddress(u) for u in subUsers], units="imperial")
 	#parse json
-	distances = [x['distance']['text'].split(" ")[0] for x in  response['rows'][0]['elements']]
+	distances = [float(x['distance']['text'].split(" ")[0]) for x in response['rows'][0]['elements']]
 	return [(subUsers[x],distances[x]) for x in range(len(subUsers))]
 
 def buildAddress(user):
