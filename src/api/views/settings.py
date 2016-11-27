@@ -29,7 +29,7 @@ class SettingsResource(Resource):
     def post(self):
         altemail = get_form('altemail')
         addressline1 = get_form('addressline1')
-        addressline2 = get_form('addressline2')
+        addressline2 = get_form('addressline2') # not required
         city = get_form('city')
         zipcode = get_form('zip')
         schedule = get_form('schedule')
@@ -37,16 +37,16 @@ class SettingsResource(Resource):
         maxdist = get_form('maxdist')
 
         # make sure required fields are not missing
-        if altemail is None or addressline1 is None or addressline2 is None or city is None or zipcode is None or drivingpref is None or maxdist is None:
+        if addressline1 is None or city is None or zipcode is None or schedule is None or drivingpref is None or maxdist is None:
             return 'Missing fields', 400
 
         # make sure the required fields are not empty
-        if len(altemail) == 0 or len(addressline1) == 0 or len(addressline2) == 0 or len(city) == 0 or len(zipcode) == 0 or len(drivingpref) == 0 or len(maxdist) == 0:
+        if len(addressline1) == 0 or len(city) == 0 or len(zipcode) == 0 or len(schedule) == 0 or len(drivingpref) == 0 or len(maxdist) == 0:
             return 'Empty fields', 400
 
         # write to db
         c = db.cursor(cursor_factory=RealDictCursor)
-        c.execute("UPDATE users SET altemail = %s, addressline1 = %s, addressline2 = %s, city = %s, zip = %s, drivingpref = %s, maxdist = %s, profilecomplete = true WHERE id = %s", (altemail, addressline1, addressline2, city, zipcode, drivingpref, maxdist, request.id))
+        c.execute("UPDATE users SET altemail = %s, addressline1 = %s, city = %s, zip = %s, drivingpref = %s, maxdist = %s, profilecomplete = true WHERE id = %s", (altemail, addressline1, city, zipcode, drivingpref, maxdist, request.id))
 
         schedule = json.loads(schedule)
 
