@@ -53,8 +53,8 @@ class SettingsResource(Resource):
         # write schedule to db
         for i in range(len(schedule)):
             day = schedule[i]
-            if day['arrive'] is None or day['depart'] is None:
-                continue
+            #if day['arrive'] is None or day['depart'] is None:
+            #    continue
             c.execute("UPDATE schedule SET arrive = %s, depart = %s WHERE userid = %s AND dayofweek = %s", (day['arrive'], day['depart'], request.id, i,))
 
         db.commit()
