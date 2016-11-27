@@ -55,7 +55,7 @@ class CheckResource(Resource):
             return 'Bad request', 400
 
         c = db.cursor(cursor_factory=RealDictCursor)
-        c.execute("SELECT id, fullname FROM users WHERE cppemail = %s", (email,))
+        c.execute("SELECT id, fullname, picture FROM users WHERE cppemail = %s", (email,))
         row = c.fetchone()
 
         if row is None:
