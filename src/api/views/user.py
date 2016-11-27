@@ -25,7 +25,7 @@ class UserResource(Resource):
             return 'User does not exist', 404
 
         # fetch user schedule
-        c.execute("SELECT * FROM schedule WHERE userid = %s", (row['id'],))
+        c.execute("SELECT * FROM schedule WHERE userid = %s ORDER BY dayofweek ASC", (row['id'],))
         schedule = c.fetchall()
         row['schedule'] = [{'arrive': day['arrive'], 'depart': day['depart']} for day in schedule]
 
