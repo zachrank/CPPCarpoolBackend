@@ -15,15 +15,16 @@ class RidesResource(Resource):
         c = db.cursor(cursor_factory=RealDictCursor)
         c.execute("SELECT * FROM users WHERE cppemail = %s", (request.email,))
         # check if we got a result
-        row = c.fetchone();
-        if row is None:
+        user = c.fetchone();
+        if user is None:
             return 'User does not exist', 404
-        # load user location info
-        user = (request.email, row['addressline1'] + ' ' + row['city'] + ', ' + str(row['zip']))
 
         # load all other users
         c.execute("SELECT * FROM users WHERE cppemail != %s AND verified = true AND profilecomplete = true AND addressline1 IS NOT NULL and city IS NOT NULL and zip IS NOT NULL", (request.email,))
         rows = c.fetchall()
+
+        if len(rows) == 0:
+            return jsonify(results=[])
 
         for row in rows:
             del row['passhash']

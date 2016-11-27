@@ -16,7 +16,14 @@ def getDists(user, subUsers):
 	#                    mode=None, language=None, avoid=None, units=None,
 	#                    departure_time=None, arrival_time=None, transit_mode=None,
 	#                    transit_routing_preference=None, traffic_model=None):
-	response = maps.distance_matrix(user[1], [x['addressline1'] for x in subUsers], units="imperial")
+	response = maps.distance_matrix(buildAddress(user), [buildAddress(u) for u in subUsers], units="imperial")
 	#parse json
 	distances = [x['distance']['text'].split(" ")[0] for x in  response['rows'][0]['elements']]
 	return [(subUsers[x],distances[x]) for x in range(len(subUsers))]
+
+def buildAddress(user):
+	address = user['addressline1']
+	if user['addressline2'] is not None:
+		address += ' ' + user['addressline2']
+	address += ', ' + user['city'] + ' ' + str(user['zip'])
+	return address
