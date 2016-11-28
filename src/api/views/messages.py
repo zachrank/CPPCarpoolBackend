@@ -16,7 +16,7 @@ class MessagesResource(Resource):
     @requires_auth
     def get(self):
         c = db.cursor(cursor_factory=RealDictCursor)
-        c.execute("SELECT * FROM messages WHERE receive_userid = %s or send_userid = %s", (request.id,request.id))
+        c.execute("SELECT * FROM messages WHERE receive_userid = %s or send_userid = %s ORDER BY timestamp ASC", (request.id,request.id))
         messages = c.fetchall()
         for m in messages:
             m['outgoing'] = m['send_userid'] == request.id
