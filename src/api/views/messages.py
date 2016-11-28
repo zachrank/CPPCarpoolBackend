@@ -15,19 +15,27 @@ def get_form(key):
 class MessagesResource(Resource):
     @requires_auth
     def get(self, other_email):
-        # lookup userid for requested user
         c = db.cursor(cursor_factory=RealDictCursor)
-        c.execute("SELECT id FROM users WHERE cppemail = %s", (other_email + '@cpp.edu',))
-        # check if we got a result
-        row = c.fetchone()
-        if row is None:
-            return 'User does not exist', 404
-        # get id
-        other_id = row['id']
+        messages = []
 
-        # lookup message history
-        c = db.cursor(cursor_factory=RealDictCursor)
-        c.execute("SELECT * FROM messages WHERE receive_userid = %s and send_userid = %s or receive_userid = %s and send_userid = %s ORDER BY timestamp ASC", (other_id, request.id, request.id, other_id))
+        if other_email is not None:
+            # fetch one conversation
+
+            # lookup userid for requested user
+            c.execute("SELECT id FROM users WHERE cppemail = %s", (other_email + '@cpp.edu',))
+            # check if we got a result
+            row = c.fetchone()
+            if row is None:
+                return 'User does not exist', 404
+            # get id
+            other_id = row['id']
+
+            # lookup message history
+            c.execute("SELECT * FROM messages WHERE receive_userid = %s and send_userid = %s or receive_userid = %s and send_userid = %s ORDER BY timestamp ASC", (other_id, request.id, request.id, other_id))
+        else:
+            # fetch all conversations
+            c.execute("SELECT * FROM messages WHERE receive_userid = %s or send_userid = %s ORDER BY timestamp ASC", (other_id, request.id))
+
         messages = c.fetchall()
         for m in messages:
             m['outgoing'] = m['send_userid'] == request.id
