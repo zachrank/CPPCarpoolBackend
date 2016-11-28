@@ -72,7 +72,7 @@ from views.user import user_bp
 from views.review import review_bp
 from views.search import search_bp
 from views.settings import settings_bp
-import maps
+from views.messages import messages_bp
 
 # Register views
 app.register_blueprint(login_bp, url_prefix='/login')
@@ -80,3 +80,4 @@ app.register_blueprint(user_bp, url_prefix='/user')
 app.register_blueprint(review_bp, url_prefix='/review')
 app.register_blueprint(search_bp, url_prefix='/search')
 app.register_blueprint(settings_bp, url_prefix='/settings')
+app.register_blueprint(messages_bp, url_prefix='/messages')
