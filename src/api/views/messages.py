@@ -14,9 +14,20 @@ def get_form(key):
 
 class MessagesResource(Resource):
     @requires_auth
-    def get(self):
+    def get(self, other_email):
+        # lookup userid for requested user
         c = db.cursor(cursor_factory=RealDictCursor)
-        c.execute("SELECT * FROM messages WHERE receive_userid = %s or send_userid = %s ORDER BY timestamp ASC", (request.id,request.id))
+        c.execute("SELECT id FROM users WHERE cppemail = %s", (other_email + '@cpp.edu',))
+        # check if we got a result
+        row = c.fetchone()
+        if row is None:
+            return 'User does not exist', 404
+        # get id
+        other_id = row['id']
+
+        # lookup message history
+        c = db.cursor(cursor_factory=RealDictCursor)
+        c.execute("SELECT * FROM messages WHERE receive_userid = %s and send_userid = %s or receive_userid = %s and send_userid = %s ORDER BY timestamp ASC", (other_id, request.id, request.id, other_id))
         messages = c.fetchall()
         for m in messages:
             m['outgoing'] = m['send_userid'] == request.id
@@ -39,4 +50,4 @@ class MessagesResource(Resource):
 
         return 'OK', 200
 
-messages_api.add_resource(MessagesResource, '/')
+messages_api.add_resource(MessagesResource, '/', '/<string:other_email>')
