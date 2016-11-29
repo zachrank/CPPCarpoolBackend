@@ -35,6 +35,10 @@ class ConversationResource(Resource):
         for m in messages:
             m['outgoing'] = m['send_userid'] == request.id
 
+        # mark as read in db
+        c.execute("UPDATE messages SET read = true WHERE receive_userid = %s and send_userid = %s", (request.id, other_id))
+        db.commit()
+
         return jsonify(results=messages)
 
     @requires_auth
@@ -68,25 +72,32 @@ class ConversationsResource(Resource):
         order = []
 
         for m in rows:
-            otherid = m['send_userid']
-            if otherid == request.id:
-                otherid = m['receive_userid']
+            is_sender = False
+            other_id = m['send_userid']
+            if other_id == request.id:
+                is_sender = True
+                other_id = m['receive_userid']
 
-            if otherid not in conversations:
-                order.append(otherid)
-                conversations[otherid] = { 'lastmessage': m }
+            if other_id not in conversations:
+                order.append(other_id)
+                conversations[other_id] = { 'id': other_id, 'lastmessage': m, 'unread': 0 }
 
                 # fetch picture and name. Slow, but works for demo
-                c.execute("SELECT picture, fullname FROM users WHERE id = %s", (otherid,))
+                c.execute("SELECT picture, fullname, cppemail FROM users WHERE id = %s", (other_id,))
                 row = c.fetchone();
                 if row is not None:
                     if row['picture'] is not None:
-                        conversations[otherid]['picture'] = row['picture']
+                        conversations[other_id]['picture'] = row['picture']
                     if row['fullname'] is not None:
-                        conversations[otherid]['fullname'] = row['fullname']
+                        conversations[other_id]['fullname'] = row['fullname']
+                    if row['cppemail'] is not None:
+                        conversations[other_id]['cppemail'] = row['cppemail']
             else:
-                if m['timestamp'] > conversations[otherid]['lastmessage']['timestamp']:
-                    conversations[otherid]['lastmessage'] = m
+                if m['timestamp'] > conversations[other_id]['lastmessage']['timestamp']:
+                    conversations[other_id]['lastmessage'] = m
+
+            if not is_sender and not m['read']:
+                conversations[other_id]['unread'] += 1
 
         results_sorted = []
         for conv_id in order:
