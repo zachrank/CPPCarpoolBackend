@@ -57,11 +57,14 @@ def unauthorized(e):
 def health_check():
     return ('OK', 200)
 
-# @app.before_request
-# def kill_time():
-#     import time
-#     # sleep for 250ms
-#     time.sleep(.25)
+# @app.after_request
+# def kill_time(response):
+#     if not hasattr(request, 'no_sleep'):
+#         # sleep for 250ms
+#         import time
+#         time.sleep(.25)
+#
+#     return response
 
 
 app.config['DEBUG'] = True
