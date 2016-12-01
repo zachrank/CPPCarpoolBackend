@@ -33,6 +33,11 @@ class RidesResource(Resource):
         sortedResults = maps.sortByDist(user, rows)
         sortedUsers = []
         for res in sortedResults:
+            print res
+            # if distance is negative, pass
+            if res[1] < 0:
+                continue
+
             res[0]['dist'] = res[1]
             del res[0]['addressline1']
             del res[0]['addressline2']
