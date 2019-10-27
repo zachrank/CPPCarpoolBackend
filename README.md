@@ -1,4 +1,7 @@
 # CPP Carpool backend
+----------
+Written in Fall 2016 for CS 480 - Software Engineering at Cal Poly Pomona
+
 Python-flask backend for cpp carpool app. Server listens on port 8080.
 
 ### Requirements
