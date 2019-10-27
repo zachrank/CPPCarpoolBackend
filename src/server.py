@@ -4,7 +4,7 @@ from gevent.wsgi import WSGIServer
 
 if __name__ == "__main__":
     try:
-        #start server
+        # start server
         http_server = WSGIServer(('0.0.0.0', 8080), app)
         http_server.serve_forever()
 

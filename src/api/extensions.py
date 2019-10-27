@@ -4,11 +4,12 @@ from flask import Response, request, make_response
 from datetime import datetime, timedelta
 from functools import wraps
 
-jwt_key =  ""
+jwt_key = ""
 with open('secrets/jwt.key', 'r') as key:
     jwt_key = key.read()
 
-jwt_token_duration = 24 * 60 # 24 hour tokens
+jwt_token_duration = 24 * 60  # 24 hour tokens
+
 
 # generate a new token
 def issue_token(id, email):
@@ -26,6 +27,7 @@ def issue_token(id, email):
     )
 
     return new_token
+
 
 def requires_auth(api_method):
     def bad_request():
@@ -45,7 +47,7 @@ def requires_auth(api_method):
 
         if type(resp) is tuple:
             if type(resp[0]) is not str:
-                resp = (json.dumps(resp[0]), ) + resp[1:]
+                resp = (json.dumps(resp[0]),) + resp[1:]
 
             return make_response(resp)
 
