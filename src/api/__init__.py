@@ -12,6 +12,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg', 'bmp', 'tif', 'gif'])
 app = Flask(__name__)
 db = psycopg2.connect("dbname='cppc' user='postgres' host='cppcarpool-db' password=''")
 
+
 # custom json encoder to convert dates to iso 8601 format
 class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):
@@ -35,27 +36,34 @@ class CustomJSONEncoder(JSONEncoder):
             return list(iterable)
         return JSONEncoder.default(self, obj)
 
+
 app.json_encoder = CustomJSONEncoder
+
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+
 @app.errorhandler(404)
 def not_found(e):
     return jsonify({"message": "Not found."}), 404
+
 
 @app.errorhandler(400)
 def bad_request(e):
     return jsonify({"message": "Bad request."}), 400
 
+
 @app.errorhandler(401)
 def unauthorized(e):
     return jsonify({"message": "Unauthorized."}), 401
 
+
 @app.route('/')
 def health_check():
     return ('OK', 200)
+
 
 # @app.after_request
 # def kill_time(response):
